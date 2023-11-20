@@ -31,7 +31,7 @@ const AuthComponent = () => {
                         onClick={handleLogin}
                         className='items-center justify-center gap-2'
                     >
-                        Login with GitHub <FaGithub className='h-6 w-6' />
+                        Sign in with GitHub <FaGithub className='h-6 w-6' />
                     </Button>
                 </div>
             </div>
