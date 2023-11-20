@@ -121,6 +121,7 @@ const NewLog = () => {
         <Dialog>
             <DialogTrigger asChild>
                 <Button
+                    id='new-log-button'
                     variant='outline'
                     className='ml-auto w-full sm:w-36 flex justify-center items-center gap-2 border-dashed border-gray-300 hover:border-solid'
                 >

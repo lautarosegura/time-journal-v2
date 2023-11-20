@@ -14,12 +14,11 @@ import { ToastAction } from '@radix-ui/react-toast'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import dayjs from 'dayjs'
 import { redirect } from 'next/navigation'
-import { useState } from 'react'
+import { BiGhost } from 'react-icons/bi'
 import { CgSpinnerAlt } from 'react-icons/cg'
-import { FaRegTrashAlt } from 'react-icons/fa'
-import { FaPencil } from 'react-icons/fa6'
+import { FaPlus, FaRegTrashAlt } from 'react-icons/fa'
+import { Button } from './ui/button'
 import { useToast } from './ui/use-toast'
-
 const Logs = () => {
     const { logs, isLoading, setLogs } = useLogs()
     const { toast } = useToast()
@@ -189,7 +188,25 @@ const Logs = () => {
                         </TableBody>
                     </Table>
                 ) : (
-                    <div className='text-center'>No logs found.</div>
+                    <div className='text-center flex flex-row items-center justify-center gap-2'>
+                        <BiGhost className='h-8 w-8' />
+                        <p className='font-semibold text-zinc-700'>
+                            Pretty empty around here - let's create your first
+                            log entry!
+                        </p>
+                        <Button
+                            variant='outline'
+                            className='mx-auto w-full sm:w-36 flex justify-center items-center gap-2 border-dashed border-gray-300 hover:border-solid'
+                            onClick={() => {
+                                document
+                                    .getElementById('new-log-button')
+                                    ?.click()
+                            }}
+                        >
+                            <FaPlus className='h-6 w-6' />
+                            New Log
+                        </Button>
+                    </div>
                 )
             ) : (
                 <CgSpinnerAlt className='mx-auto mt-10 h-10 w-10 animate-spin' />
