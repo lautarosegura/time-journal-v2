@@ -6,13 +6,16 @@ export interface Log {
     date: Date | null
     hours: number
     note: string
+    id: string
 }
 
 type LogsContextType = {
     log: Log
     logs: Log[]
-    addLog: (log: Log) => void
+    setLogs: (logs: Log[]) => void
     setLog: (log: Log) => void
+    isLoading: boolean
+    setIsLoading: (isLoading: boolean) => void
 }
 
 export const LogsContext = createContext<LogsContextType | null>(null)
@@ -25,16 +28,21 @@ const LogsContextProvider = ({ children }: LogsContextProviderProps) => {
     const [log, setLogState] = useState<Log>({
         date: null,
         hours: 0,
-        note: ''
+        note: '',
+        id: ''
     })
+    const [logs, setLogsState] = useState<Log[]>([])
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const setLog = (log: Partial<Log>) => {
         setLogState((prevLog) => ({
             ...prevLog,
             ...log
         }))
+    }
 
-        console.log(log)
+    const setLogs = (logs: Log[]) => {
+        setLogsState(logs)
     }
 
     useEffect(() => {}, [])
@@ -43,9 +51,11 @@ const LogsContextProvider = ({ children }: LogsContextProviderProps) => {
         <LogsContext.Provider
             value={{
                 log,
-                logs: [],
-                addLog: () => {},
-                setLog
+                logs,
+                setLogs,
+                setLog,
+                isLoading,
+                setIsLoading
             }}
         >
             {children}

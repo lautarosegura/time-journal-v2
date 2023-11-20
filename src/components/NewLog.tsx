@@ -14,6 +14,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useLogs } from '@/context/LogsContext'
 import { ToastAction } from '@radix-ui/react-toast'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { redirect } from 'next/navigation'
 import { FaPlus } from 'react-icons/fa6'
 import { DatePicker } from './DatePicker'
 import { useToast } from './ui/use-toast'
@@ -21,7 +23,7 @@ import { useToast } from './ui/use-toast'
 const NewLog = () => {
     const { toast } = useToast()
 
-    const { log, setLog } = useLogs()
+    const { log, setLog, setLogs } = useLogs()
 
     const closeDialog = () => {
         document.getElementById('dialog-close-button')?.click()
@@ -53,10 +55,58 @@ const NewLog = () => {
         }
     }
 
-    const handleLogSubmission = () => {
+    const handleLogSubmission = async () => {
         try {
             validateLog()
+            const supabase = createClientComponentClient()
+
+            const user = await supabase.auth.getUser()
+
+            const { data } = user
+
+            if (!data || !data.user) {
+                await supabase.auth.signOut()
+                return redirect('/auth')
+            }
+
+            const { data: existingData, error: existingError } = await supabase
+                .from('logs')
+                .select('logs')
+                .eq('user_id', data.user.id)
+                .maybeSingle()
+
+            if (existingError) throw existingError.message
+
+            const newLog = {
+                date: log.date,
+                hours: log.hours,
+                note: log.note,
+                id: crypto.randomUUID()
+            }
+            let updatedLogs
+            if (existingData) {
+                updatedLogs = [...existingData.logs, newLog]
+            } else {
+                updatedLogs = [newLog]
+            }
+
+            const { error: upsertError } = await supabase.from('logs').upsert({
+                user_id: data.user.id,
+                logs: updatedLogs
+            })
+
+            if (upsertError) throw upsertError.message
+
+            setLogs(updatedLogs)
+
             closeDialog()
+
+            toast({
+                title: 'Success!',
+                description: 'Your log has been created.',
+                variant: 'default',
+                action: <ToastAction altText='Close'>Close</ToastAction>
+            })
         } catch (error) {
             toast({
                 title: 'Oops! Something went wrong.',
