@@ -188,7 +188,7 @@ const Logs = () => {
                         </TableBody>
                     </Table>
                 ) : (
-                    <div className='text-center flex flex-column items-center justify-center gap-2'>
+                    <div className='text-center flex flex-column items-center justify-center gap-2 max-w-xl mx-auto'>
                         <BiGhost className='h-8 w-8 block' />
                         <p className='font-semibold text-zinc-700'>
                             Pretty empty around here - let's create your first
