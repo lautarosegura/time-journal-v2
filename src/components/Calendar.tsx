@@ -6,14 +6,14 @@ import {
     HoverCardTrigger
 } from '@/components/ui/hover-card'
 import { useLogs } from '@/context/LogsContext'
-import { cn } from '@/lib/utils'
+import { cn, fetchLogs, getUser } from '@/lib/utils'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import dayjs from 'dayjs'
 import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
 
 const Calendar = () => {
-    const { logs, setLogs, setIsLoading } = useLogs()
+    const { logs, setIsLoading } = useLogs()
 
     const getDaysInMonth = (year = dayjs().year(), month = dayjs().month()) => {
         const startDate = dayjs().year(year).month(month).date(1)
@@ -39,36 +39,6 @@ const Calendar = () => {
     }
 
     useEffect(() => {
-        const fetchLogs = async () => {
-            const supabase = createClientComponentClient()
-
-            const { data: userData, error } = await supabase.auth.getUser()
-
-            if (error) {
-                throw error
-            }
-
-            if (!userData || !userData.user) {
-                await supabase.auth.signOut()
-                return redirect('/auth')
-            }
-
-            const { data: logsData, error: logsError } = await supabase
-                .from('logs')
-                .select('*')
-                .eq('user_id', userData.user.id)
-
-            if (logsError) {
-                throw logsError
-            }
-
-            if (!logsData) {
-                return
-            }
-
-            setLogs(logsData[0]?.logs || [])
-        }
-
         setIsLoading(true)
         fetchLogs().then(() => setIsLoading(false))
     }, [])

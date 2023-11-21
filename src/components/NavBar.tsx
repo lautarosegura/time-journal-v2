@@ -24,7 +24,10 @@ const NavBar = () => {
             </a>
 
             {!isAuthPage ? (
-                <Button onClick={handleLogout}>Sign Out</Button>
+                <>
+                    <Button>Settings</Button>
+                    <Button onClick={handleLogout}>Sign Out</Button>
+                </>
             ) : null}
         </nav>
     )
