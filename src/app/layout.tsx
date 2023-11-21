@@ -1,8 +1,8 @@
 import NavBar from '@/components/NavBar'
-import { Toaster } from '@/components/ui/toaster'
 import LogsContextProvider from '@/context/LogsContext'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { Toaster } from 'react-hot-toast'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })

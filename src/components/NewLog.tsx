@@ -16,13 +16,11 @@ import { useLogs } from '@/context/LogsContext'
 import { ToastAction } from '@radix-ui/react-toast'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { redirect } from 'next/navigation'
+import toast from 'react-hot-toast'
 import { FaPlus } from 'react-icons/fa6'
 import { DatePicker } from './DatePicker'
-import { useToast } from './ui/use-toast'
 
 const NewLog = () => {
-    const { toast } = useToast()
-
     const { log, setLog, setLogs } = useLogs()
 
     const closeDialog = () => {
@@ -101,19 +99,9 @@ const NewLog = () => {
 
             closeDialog()
 
-            toast({
-                title: 'Success!',
-                description: 'Your log has been created.',
-                variant: 'default',
-                action: <ToastAction altText='Close'>Close</ToastAction>
-            })
+            toast('Success! Your log has been created.', { duration: 4000 })
         } catch (error) {
-            toast({
-                title: 'Oops! Something went wrong.',
-                description: error as string,
-                variant: 'destructive',
-                action: <ToastAction altText='Try again'>Try again</ToastAction>
-            })
+            toast('Oops! Something went wrong.', { duration: 4000 })
         }
     }
 

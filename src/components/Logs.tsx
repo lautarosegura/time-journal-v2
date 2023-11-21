@@ -10,70 +10,20 @@ import {
     TableRow
 } from '@/components/ui/table'
 import { Log, useLogs } from '@/context/LogsContext'
+import { getUser } from '@/lib/utils'
 import { ToastAction } from '@radix-ui/react-toast'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import dayjs from 'dayjs'
 import { redirect } from 'next/navigation'
+import { useEffect } from 'react'
+import toast from 'react-hot-toast'
 import { BiGhost } from 'react-icons/bi'
 import { CgSpinnerAlt } from 'react-icons/cg'
 import { FaPlus, FaRegTrashAlt } from 'react-icons/fa'
 import { Button } from './ui/button'
-import { useToast } from './ui/use-toast'
+
 const Logs = () => {
     const { logs, isLoading, setLogs } = useLogs()
-    const { toast } = useToast()
-
-    const restoreLog = async (log: Log) => {
-        try {
-            const supabase = createClientComponentClient()
-
-            const { data: userData, error: userError } =
-                await supabase.auth.getUser()
-
-            if (userError) throw userError.message
-
-            if (!userData || !userData.user) {
-                await supabase.auth.signOut()
-                return redirect('/auth')
-            }
-
-            const { data: logsData, error: logsError } = await supabase
-                .from('logs')
-                .select('logs')
-                .eq('user_id', userData.user.id)
-                .single()
-
-            if (logsError) throw logsError.message
-
-            if (!logsData) throw 'No logs found.'
-
-            const existingLogs = logsData.logs as Log[]
-
-            const updatedLogs = [...existingLogs, log]
-
-            const { error: updateError } = await supabase
-                .from('logs')
-                .update({ logs: updatedLogs })
-                .eq('user_id', userData.user.id)
-
-            if (updateError) throw updateError.message
-
-            setLogs(updatedLogs)
-
-            toast({
-                title: 'Log restored successfully.',
-                variant: 'default',
-                action: <ToastAction altText='Close'>Close</ToastAction>
-            })
-        } catch (error) {
-            toast({
-                title: 'Oops! Something went wrong.',
-                description: error as string,
-                variant: 'destructive',
-                action: <ToastAction altText='Try again'>Try again</ToastAction>
-            })
-        }
-    }
 
     const handleLogDeletion = async (id: string) => {
         try {
@@ -113,26 +63,12 @@ const Logs = () => {
 
             setLogs(updatedLogs)
 
-            toast({
-                title: 'Log deleted successfully.',
-                variant: 'default',
-                action: (
-                    <ToastAction
-                        altText='Undo'
-                        onClick={() => {
-                            if (log) restoreLog(log)
-                        }}
-                    >
-                        Undo
-                    </ToastAction>
-                )
+            toast('Log deleted succesfully.', {
+                duration: 4000
             })
         } catch (error) {
-            toast({
-                title: 'Oops! Something went wrong.',
-                description: error as string,
-                variant: 'destructive',
-                action: <ToastAction altText='Try again'>Try again</ToastAction>
+            toast('Oops! Something went wrong.', {
+                duration: 4000
             })
         }
     }
