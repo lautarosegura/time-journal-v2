@@ -10,17 +10,13 @@ import {
     TableRow
 } from '@/components/ui/table'
 import { Log, useLogs } from '@/context/LogsContext'
-import { getUser } from '@/lib/utils'
-import { ToastAction } from '@radix-ui/react-toast'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import dayjs from 'dayjs'
 import { redirect } from 'next/navigation'
-import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { BiGhost } from 'react-icons/bi'
 import { CgSpinnerAlt } from 'react-icons/cg'
 import { FaPlus, FaRegTrashAlt } from 'react-icons/fa'
-import { Button } from './ui/button'
 
 const Logs = () => {
     const { logs, isLoading, setLogs } = useLogs()
@@ -124,24 +120,12 @@ const Logs = () => {
                         </TableBody>
                     </Table>
                 ) : (
-                    <div className='text-center flex flex-col items-center justify-center gap-2 max-w-xl mx-auto mt-5'>
+                    <div className='text-center flex flex-col items-center justify-center gap-2 max-w-xl mx-auto mt-15'>
                         <BiGhost className='h-8 w-8 block' />
                         <p className='font-semibold text-zinc-700'>
                             Pretty empty around here - let's create your first
                             log entry!
                         </p>
-                        <Button
-                            variant='outline'
-                            className='mx-auto w-full sm:w-36 flex justify-center items-center gap-2 border-dashed border-gray-300 hover:border-solid'
-                            onClick={() => {
-                                document
-                                    .getElementById('new-log-button')
-                                    ?.click()
-                            }}
-                        >
-                            <FaPlus className='h-6 w-6' />
-                            New Log
-                        </Button>
                     </div>
                 )
             ) : (
