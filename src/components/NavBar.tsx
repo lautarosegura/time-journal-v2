@@ -24,10 +24,10 @@ const NavBar = () => {
             </a>
 
             {!isAuthPage ? (
-                <>
+                <div className='flex gap-2 items-center justify-center'>
                     <Button>Settings</Button>
                     <Button onClick={handleLogout}>Sign Out</Button>
-                </>
+                </div>
             ) : null}
         </nav>
     )
