@@ -23,7 +23,11 @@ export default function RootLayout({
                 <main className='max-w-6xl mx-auto min-h-screen'>
                     <NavBar />
                     <LogsContextProvider>{children}</LogsContextProvider>
-                    <Toaster />
+                    <Toaster
+                        toastOptions={{
+                            position: 'bottom-right'
+                        }}
+                    />
                 </main>
             </body>
         </html>
