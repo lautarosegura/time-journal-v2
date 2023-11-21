@@ -19,8 +19,6 @@ export const getUser = async () => {
 }
 
 export const fetchLogs = async () => {
-    const { setLogs } = useLogs()
-
     const supabase = createClientComponentClient()
 
     const user = await getUser()
@@ -43,5 +41,5 @@ export const fetchLogs = async () => {
         return
     }
 
-    setLogs(logsData[0]?.logs || [])
+    return logsData[0]?.logs || []
 }

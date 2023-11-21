@@ -13,7 +13,7 @@ import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
 
 const Calendar = () => {
-    const { logs, setIsLoading } = useLogs()
+    const { logs, setIsLoading, setLogs } = useLogs()
 
     const getDaysInMonth = (year = dayjs().year(), month = dayjs().month()) => {
         const startDate = dayjs().year(year).month(month).date(1)
@@ -40,7 +40,10 @@ const Calendar = () => {
 
     useEffect(() => {
         setIsLoading(true)
-        fetchLogs().then(() => setIsLoading(false))
+        fetchLogs().then((logs) => {
+            setLogs(logs)
+            setIsLoading(false)
+        })
     }, [])
 
     return (
